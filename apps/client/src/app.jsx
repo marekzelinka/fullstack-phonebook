@@ -11,7 +11,7 @@ export function App() {
     { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
   ]);
 
-  const addPerson = ({ name }) => {
+  const addPerson = ({ name, number }) => {
     const personWithSameName = persons.find((person) => person.name === name);
     if (personWithSameName) {
       window.alert(`${name} is already added to phonebook!`);
@@ -21,6 +21,7 @@ export function App() {
 
     const newObject = {
       name,
+      number,
       id: persons.length + 1,
     };
 

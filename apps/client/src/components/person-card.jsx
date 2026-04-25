@@ -1,3 +1,7 @@
 export function PersonCard({ person }) {
-  return <div>{person.name}</div>;
+  return (
+    <div>
+      {person.name} {person.number}
+    </div>
+  );
 }

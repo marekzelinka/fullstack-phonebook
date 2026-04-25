@@ -11,6 +11,7 @@ export function AddPersonForm({ onSubmit }) {
 
         const result = onSubmit({
           name: formData.get("name"),
+          number: formData.get("number"),
         });
         if (result.success) {
           form.reset();
@@ -18,8 +19,12 @@ export function AddPersonForm({ onSubmit }) {
       }}
     >
       <div style={fieldStyles}>
-        <label htmlFor="name">Name:</label>
+        <label htmlFor="name">Name</label>
         <input type="text" name="name" id="name" required />
+      </div>
+      <div style={fieldStyles}>
+        <label htmlFor="number">Number</label>
+        <input type="text" name="number" id="number" required />
       </div>
       <div>
         <button type="submit">Add</button>
