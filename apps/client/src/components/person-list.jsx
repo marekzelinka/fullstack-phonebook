@@ -2,10 +2,14 @@ import { PersonCard } from "./person-card.jsx";
 
 const listStyles = { listStyle: "none", paddingLeft: 0 };
 
-export function PersonList({ persons }) {
+export function PersonList({ persons, filterText }) {
+  const filteredPersons = persons.filter((person) =>
+    person.name.toLowerCase().includes(filterText.toLowerCase()),
+  );
+
   return (
     <ul style={listStyles}>
-      {persons.map((person) => (
+      {filteredPersons.map((person) => (
         <li key={person.id}>
           <PersonCard person={person} />
         </li>

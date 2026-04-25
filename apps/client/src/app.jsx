@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { AddPersonForm } from "./components/add-person-form.jsx";
+import { PersonFilters } from "./components/person-filters.jsx";
 import { PersonList } from "./components/person-list.jsx";
 
 export function App() {
@@ -30,13 +31,18 @@ export function App() {
     return { success: true };
   };
 
+  const [filterText, setFilterText] = useState("");
+
   return (
     <>
       <h1>Fullstack Phonebook</h1>
-      <aside>{/* <PersonFilters  />*/}</aside>
+      <aside>
+        <PersonFilters filterText={filterText} onFilterTextChange={setFilterText} />
+      </aside>
+      <h2>Add a new person</h2>
       <AddPersonForm onSubmit={addPerson} />
       <h2>Numbers</h2>
-      <PersonList persons={persons} />
+      <PersonList persons={persons} filterText={filterText} />
     </>
   );
 }
