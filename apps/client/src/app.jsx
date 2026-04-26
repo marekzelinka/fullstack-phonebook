@@ -31,18 +31,18 @@ export function App() {
     return { success: true };
   };
 
-  const [filterText, setFilterText] = useState("");
+  const [searchText, setSearchText] = useState("");
 
   return (
     <>
       <h1>Fullstack Phonebook</h1>
       <aside>
-        <PersonFilters filterText={filterText} onFilterTextChange={setFilterText} />
+        <PersonFilters searchText={searchText} onSearchTextChange={setSearchText} />
       </aside>
       <h2>Add a new person</h2>
       <AddPersonForm onSubmit={addPerson} />
       <h2>Numbers</h2>
-      <PersonList persons={persons} filterText={filterText} />
+      <PersonList persons={persons} filterText={searchText} />
     </>
   );
 }
