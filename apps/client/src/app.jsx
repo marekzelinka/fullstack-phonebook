@@ -16,9 +16,21 @@ export function App() {
   const addPerson = async ({ name, number }) => {
     const personWithSameName = persons.find((person) => person.name === name);
     if (personWithSameName) {
-      window.alert(`${name} is already added to phonebook!`);
+      const shouldReplaceNumber = window.confirm(
+        `${name} is already added to phonebook, replace the old number with a new one?`,
+      );
+      if (!shouldReplaceNumber) {
+        return { success: false };
+      }
 
-      return;
+      const personObject = { ...personWithSameName, number };
+
+      const updatedPerson = await personsApi.update(personWithSameName.id, personObject);
+      setPersons((persons) =>
+        persons.map((person) => (person.id === personWithSameName.id ? updatedPerson : person)),
+      );
+
+      return { success: true };
     }
 
     const personObject = {

@@ -35,6 +35,6 @@ export const personsApi = {
   getAll: () => api.get("/persons"),
   // getById: (id) => api.get(`/notes/${id}`),
   create: (data) => api.post("/persons", data),
-  // update: (id, data) => api.put(`/notes/${id}`, data),
+  update: (id, data) => api.put(`/persons/${id}`, data),
   delete: (id) => api.delete(`/persons/${id}`),
 };
