@@ -70,10 +70,17 @@ export function App() {
       return;
     }
 
-    await personsApi.delete(id);
-    setPersons((prevPersons) => prevPersons.filter((person) => person.id !== id));
+    try {
+      await personsApi.delete(id);
 
-    notify(`Deleted "${existingPerson.name}"`, { variant: "info" });
+      notify(`Deleted "${existingPerson.name}"`, { variant: "info" });
+    } catch {
+      notify(`Information of "${existingPerson.name}" was already removed from server`, {
+        variant: "error",
+      });
+    } finally {
+      setPersons((prevPersons) => prevPersons.filter((person) => person.id !== id));
+    }
   };
 
   const [searchText, setSearchText] = useState("");
