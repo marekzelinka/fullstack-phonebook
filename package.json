@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev:server": "pnpm --filter server dev",
     "dev:client": "pnpm --filter client dev",
     "dev": "pnpm run -p --filter \"./apps/**\" dev",
     "lint": "oxlint",
