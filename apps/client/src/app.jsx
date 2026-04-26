@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 import { AddPersonForm } from "./components/add-person-form.jsx";
 import { Alert } from "./components/alert.jsx";
+import { Footer } from "./components/footer.jsx";
 import { PersonFilters } from "./components/person-filters.jsx";
 import { PersonList } from "./components/person-list.jsx";
 import { personsApi } from "./lib/api.js";
@@ -37,7 +38,7 @@ export function App() {
         return { success: false };
       }
 
-      const personObject = { ...personWithSameName, number };
+      const personObject = { number };
 
       const updatedPerson = await personsApi.update(personWithSameName.id, personObject);
       setPersons((prevPersons) =>
@@ -104,6 +105,7 @@ export function App() {
           <PersonList persons={persons} filterText={searchText} onDelete={deletePerson} />
         </section>
       </main>
+      <Footer />
     </>
   );
 }

@@ -33,8 +33,8 @@ api.interceptors.response.use(
 
 export const personsApi = {
   getAll: () => api.get("/persons"),
-  // getById: (id) => api.get(`/notes/${id}`),
+  getById: (id) => api.get(`/persons/${id}`),
   create: (data) => api.post("/persons", data),
-  update: (id, data) => api.put(`/persons/${id}`, data),
+  update: (id, data) => api.patch(`/persons/${id}`, data),
   delete: (id) => api.delete(`/persons/${id}`),
 };
