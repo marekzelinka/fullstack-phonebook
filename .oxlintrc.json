@@ -2,9 +2,14 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["unicorn", "oxc"],
   "categories": {
-    "correctness": "error"
+    "correctness": "error",
+    "nursery": "error",
+    "suspicious": "warn",
+    "pedantic": "off"
   },
-  "rules": {},
+  "rules": {
+    "eslint/no-unused-vars": "error"
+  },
   "env": {
     "builtin": true
   }

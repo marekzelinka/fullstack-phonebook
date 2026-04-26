@@ -1,12 +1,26 @@
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { AddPersonForm } from "./components/add-person-form.jsx";
+import { Alert } from "./components/alert.jsx";
 import { PersonFilters } from "./components/person-filters.jsx";
 import { PersonList } from "./components/person-list.jsx";
 import { personsApi } from "./lib/api.js";
 
 export function App() {
+  const [alert, setAlert] = useState(null);
+  const alertTimeoutIdRef = useRef();
+
+  const notify = (message, { variant = "success" } = {}) => {
+    if (alertTimeoutIdRef.current) {
+      clearTimeout(alertTimeoutIdRef.current);
+    }
+
+    setAlert({ variant, message });
+    const timeoutId = setTimeout(() => setAlert(null), 3500);
+
+    alertTimeoutIdRef.current = timeoutId;
+  };
+
   const [persons, setPersons] = useState([]);
 
   useEffect(() => {
@@ -26,9 +40,11 @@ export function App() {
       const personObject = { ...personWithSameName, number };
 
       const updatedPerson = await personsApi.update(personWithSameName.id, personObject);
-      setPersons((persons) =>
-        persons.map((person) => (person.id === personWithSameName.id ? updatedPerson : person)),
+      setPersons((prevPersons) =>
+        prevPersons.map((person) => (person.id === personWithSameName.id ? updatedPerson : person)),
       );
+
+      notify(`Updated number of "${name}"`, { variant: "info" });
 
       return { success: true };
     }
@@ -39,7 +55,9 @@ export function App() {
     };
 
     const createdPreson = await personsApi.create(personObject);
-    setPersons((persons) => persons.concat(createdPreson));
+    setPersons((prevPersons) => prevPersons.concat(createdPreson));
+
+    notify(`Added "${name}"`);
 
     return { success: true };
   };
@@ -53,7 +71,9 @@ export function App() {
     }
 
     await personsApi.delete(id);
-    setPersons((persons) => persons.filter((person) => person.id !== id));
+    setPersons((prevPersons) => prevPersons.filter((person) => person.id !== id));
+
+    notify(`Deleted "${existingPerson.name}"`, { variant: "info" });
   };
 
   const [searchText, setSearchText] = useState("");
@@ -62,6 +82,7 @@ export function App() {
     <>
       <header>
         <h1>Fullstack Phonebook</h1>
+        {alert ? <Alert {...alert} /> : null}
       </header>
       <aside>
         <PersonFilters searchText={searchText} onSearchTextChange={setSearchText} />
