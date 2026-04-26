@@ -35,14 +35,22 @@ export function App() {
 
   return (
     <>
-      <h1>Fullstack Phonebook</h1>
+      <header>
+        <h1>Fullstack Phonebook</h1>
+      </header>
       <aside>
         <PersonFilters searchText={searchText} onSearchTextChange={setSearchText} />
       </aside>
-      <h2>Add a new person</h2>
-      <AddPersonForm onSubmit={addPerson} />
-      <h2>Numbers</h2>
-      <PersonList persons={persons} filterText={searchText} />
+      <main>
+        <section>
+          <h2>Add a new person</h2>
+          <AddPersonForm onSubmit={addPerson} />
+        </section>
+        <section>
+          <h2>Numbers</h2>
+          <PersonList persons={persons} filterText={searchText} />
+        </section>
+      </main>
     </>
   );
 }

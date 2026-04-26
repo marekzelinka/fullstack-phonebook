@@ -8,7 +8,7 @@ export function PersonList({ persons, filterText }) {
   );
 
   return (
-    <ul style={listStyles}>
+    <ul role="list" style={listStyles}>
       {filteredPersons.map((person) => (
         <li key={person.id}>
           <PersonCard person={person} />
