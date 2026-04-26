@@ -3,13 +3,13 @@ const fieldStyles = { display: "flex", gap: 8 };
 export function AddPersonForm({ onSubmit }) {
   return (
     <form
-      onSubmit={(event) => {
+      onSubmit={async (event) => {
         event.preventDefault();
 
         const form = event.currentTarget;
         const formData = new FormData(form);
 
-        const result = onSubmit({
+        const result = await onSubmit({
           name: formData.get("name"),
           number: formData.get("number"),
         });
@@ -26,7 +26,7 @@ export function AddPersonForm({ onSubmit }) {
         <label htmlFor="number">Number</label>
         <input type="text" name="number" id="number" required />
       </div>
-      <div>
+      <div style={fieldStyles}>
         <button type="submit">Add</button>
       </div>
     </form>

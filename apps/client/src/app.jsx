@@ -13,7 +13,7 @@ export function App() {
     personsApi.getAll().then(setPersons);
   }, []);
 
-  const addPerson = ({ name, number }) => {
+  const addPerson = async ({ name, number }) => {
     const personWithSameName = persons.find((person) => person.name === name);
     if (personWithSameName) {
       window.alert(`${name} is already added to phonebook!`);
@@ -21,13 +21,13 @@ export function App() {
       return;
     }
 
-    const newObject = {
+    const personObject = {
       name,
       number,
-      id: persons.length + 1,
     };
 
-    setPersons((persons) => persons.concat(newObject));
+    const createdPreson = await personsApi.create(personObject);
+    setPersons((persons) => persons.concat(createdPreson));
 
     return { success: true };
   };

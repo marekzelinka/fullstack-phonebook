@@ -1,6 +1,6 @@
 export function PersonFilters({ searchText, onSearchTextChange }) {
   return (
-    <div>
+    <div role="group" aria-label="Person filter options">
       <div>
         <label>
           Filter shown with{" "}
