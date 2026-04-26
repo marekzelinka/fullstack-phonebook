@@ -32,6 +32,18 @@ export function App() {
     return { success: true };
   };
 
+  const deletePerson = async (id) => {
+    const existingPerson = persons.find((person) => person.id === id);
+
+    const shouldDelete = window.confirm(`Delete "${existingPerson.name}"?`);
+    if (!shouldDelete) {
+      return;
+    }
+
+    await personsApi.delete(id);
+    setPersons((persons) => persons.filter((person) => person.id !== id));
+  };
+
   const [searchText, setSearchText] = useState("");
 
   return (
@@ -49,7 +61,7 @@ export function App() {
         </section>
         <section>
           <h2>Numbers</h2>
-          <PersonList persons={persons} filterText={searchText} />
+          <PersonList persons={persons} filterText={searchText} onDelete={deletePerson} />
         </section>
       </main>
     </>

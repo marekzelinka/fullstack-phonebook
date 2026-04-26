@@ -2,7 +2,7 @@ import { PersonCard } from "./person-card.jsx";
 
 const listStyles = { listStyle: "none", paddingLeft: 0 };
 
-export function PersonList({ persons, filterText }) {
+export function PersonList({ persons, filterText, onDelete }) {
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(filterText.toLowerCase()),
   );
@@ -11,7 +11,7 @@ export function PersonList({ persons, filterText }) {
     <ul role="list" style={listStyles}>
       {filteredPersons.map((person) => (
         <li key={person.id}>
-          <PersonCard person={person} />
+          <PersonCard person={person} onDelete={onDelete} />
         </li>
       ))}
     </ul>
