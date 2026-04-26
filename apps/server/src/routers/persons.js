@@ -5,23 +5,23 @@ import { Person } from "../models/person.js";
 export const personsRouter = express.Router();
 
 personsRouter.post("/", async (req, res) => {
-  const { name, number } = req.body;
-  if (!name) {
-    res.status(400).json({ detail: "Name is required" });
+  const { name, number } = req.body ?? {};
+  // if (!name) {
+  //   res.status(400).json({ detail: "Name is required" });
 
-    return;
-  }
+  //   return;
+  // }
   // const personWithSameName = persons.find((person) => person.name === name);
   // if (personWithSameName) {
   //   res.status(400).json({ detail: "Name must be unique" });
 
   //   return;
   // }
-  if (!number) {
-    res.status(400).json({ detail: "Number is required" });
+  // if (!number) {
+  //   res.status(400).json({ detail: "Number is required" });
 
-    return;
-  }
+  //   return;
+  // }
 
   const person = await Person.create({
     name,
@@ -49,7 +49,7 @@ personsRouter.get("/:personId", async (req, res) => {
 });
 
 personsRouter.patch("/:personId", async (req, res) => {
-  const { name, number } = req.body;
+  const { name, number } = req.body ?? {};
 
   const person = await Person.findByIdAndUpdate(
     req.params.personId,

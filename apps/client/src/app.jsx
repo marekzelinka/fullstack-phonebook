@@ -55,12 +55,18 @@ export function App() {
       number,
     };
 
-    const createdPreson = await personsApi.create(personObject);
-    setPersons((prevPersons) => prevPersons.concat(createdPreson));
+    try {
+      const createdPreson = await personsApi.create(personObject);
+      setPersons((prevPersons) => prevPersons.concat(createdPreson));
 
-    notify(`Added "${name}"`);
+      notify(`Added "${name}"`);
 
-    return { success: true };
+      return { success: true };
+    } catch (error) {
+      notify(error.response.data.error, { variant: "error" });
+
+      return { success: false };
+    }
   };
 
   const deletePerson = async (id) => {
