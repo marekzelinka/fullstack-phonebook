@@ -6,27 +6,8 @@ export const personsRouter = express.Router();
 
 personsRouter.post("/", async (req, res) => {
   const { name, number } = req.body ?? {};
-  // if (!name) {
-  //   res.status(400).json({ detail: "Name is required" });
 
-  //   return;
-  // }
-  // const personWithSameName = persons.find((person) => person.name === name);
-  // if (personWithSameName) {
-  //   res.status(400).json({ detail: "Name must be unique" });
-
-  //   return;
-  // }
-  // if (!number) {
-  //   res.status(400).json({ detail: "Number is required" });
-
-  //   return;
-  // }
-
-  const person = await Person.create({
-    name,
-    number,
-  });
+  const person = await Person.create({ name, number });
 
   res.status(201).json(person);
 });
@@ -40,7 +21,7 @@ personsRouter.get("/", async (_req, res) => {
 personsRouter.get("/:personId", async (req, res) => {
   const person = await Person.findById(req.params.personId);
   if (!person) {
-    res.status(404).json({ detail: "Person not found" });
+    res.status(404).json({ error: "Person not found" });
 
     return;
   }
@@ -54,13 +35,10 @@ personsRouter.patch("/:personId", async (req, res) => {
   const person = await Person.findByIdAndUpdate(
     req.params.personId,
     { name, number },
-    {
-      runValidators: true,
-      returnDocument: "after",
-    },
+    { runValidators: true, returnDocument: "after", context: "query" },
   );
   if (!person) {
-    res.status(404).json({ detail: "Person not found" });
+    res.status(404).json({ error: "Person not found" });
 
     return;
   }
