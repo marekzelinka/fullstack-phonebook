@@ -5,7 +5,7 @@ import { Person } from "../models/person.js";
 export const personsRouter = express.Router();
 
 personsRouter.post("/", async (req, res) => {
-  const { name, number } = req.body ?? {};
+  const { name, number } = req.body;
 
   const person = await Person.create({ name, number });
 
@@ -30,7 +30,7 @@ personsRouter.get("/:personId", async (req, res) => {
 });
 
 personsRouter.patch("/:personId", async (req, res) => {
-  const { name, number } = req.body ?? {};
+  const { name, number } = req.body;
 
   const person = await Person.findByIdAndUpdate(
     req.params.personId,

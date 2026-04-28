@@ -42,17 +42,20 @@ describe("when there are initially some persons saved", () => {
         error: /name must be at least 3 characters long/i,
       },
       {
-        data: { name: "Arto Hellas", number: "04-1234567" },
+        data: personTestUtils.initial[0],
         error: /name must be unique/i,
       },
-    ])("fails with status 400 with $data and $error", async ({ data, error }) => {
-      const res = await api.post("/api/persons").send(data);
-      expect(res.status).toBe(400);
-      expect(res.body.error).toMatch(error);
+    ])(
+      "fails with status 400 and correct error ($error) if data ($data) is invalid",
+      async ({ data, error }) => {
+        const res = await api.post("/api/persons").send(data);
+        expect(res.status).toBe(400);
+        expect(res.body.error).toMatch(error);
 
-      const personsAtEnd = await personTestUtils.getSaved();
-      expect(personsAtEnd).toHaveLength(personTestUtils.initial.length);
-    });
+        const personsAtEnd = await personTestUtils.getSaved();
+        expect(personsAtEnd).toHaveLength(personTestUtils.initial.length);
+      },
+    );
   });
 
   describe("viewing persons", () => {
