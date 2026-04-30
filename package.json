@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev:server": "pnpm --filter server dev",
     "dev:client": "pnpm --filter client dev",
+    "dev:server": "pnpm --filter server dev",
     "dev": "pnpm run --parallel --filter \"./apps/**\" dev",
     "test:client": "pnpm run test --project client",
     "test:server": "pnpm run test --project server",
@@ -28,5 +28,5 @@
     "*.{js,jsx,ts,tsx,mjs,cjs}": "pnpm run lint",
     "*": "oxfmt --no-error-on-unmatched-pattern"
   },
-  "packageManager": "pnpm@11.0.0-rc.5"
+  "packageManager": "pnpm@11.0.0"
 }

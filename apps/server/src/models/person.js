@@ -12,9 +12,15 @@ const personSchema = new mongoose.Schema({
     minLength: [8, "Number must be at least 8 characters long"],
     validate: {
       validator: (v) => /\d{2,3}-\d+/.test(v),
-      message: (_props) => "Number muse be a valid phone number",
+      message: (_props) => "Number must be a valid phone number",
     },
     required: [true, "Number is required"],
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: [true, "A person must belong to a owner"],
+    immutable: [true, "Changing the owner of a person is not allowed"],
   },
 });
 
