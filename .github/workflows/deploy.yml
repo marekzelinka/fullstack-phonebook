@@ -27,6 +27,9 @@ jobs:
 
       - name: Run Tests
         run: pnpm vitest run
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
   deploy:
     needs: quality-gate
