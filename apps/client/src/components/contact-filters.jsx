@@ -1,6 +1,6 @@
-export function PersonFilters({ searchText, onSearchTextChange }) {
+export function ContactFilters({ searchText, onSearchTextChange }) {
   return (
-    <div role="group" aria-label="Person filter options">
+    <div role="group" aria-label="Contact filter options">
       <div>
         <label>
           Filter shown with{" "}

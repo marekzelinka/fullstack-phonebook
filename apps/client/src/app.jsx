@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 
-import { AddPersonForm } from "./components/add-person-form.jsx";
+import { AddContactForm } from "./components/add-contact-form.jsx";
 import { Alert } from "./components/alert.jsx";
+import { ContactFilters } from "./components/contact-filters.jsx";
+import { ContactList } from "./components/contact-list.jsx";
 import { Footer } from "./components/footer.jsx";
-import { PersonFilters } from "./components/person-filters.jsx";
-import { PersonList } from "./components/person-list.jsx";
-import { personsApi } from "./lib/api.js";
+import { contactsApi } from "./lib/api.js";
 
 export function App() {
   const [alert, setAlert] = useState(null);
@@ -22,15 +22,15 @@ export function App() {
     alertTimeoutIdRef.current = timeoutId;
   };
 
-  const [persons, setPersons] = useState([]);
+  const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
-    personsApi.getAll().then(setPersons);
+    contactsApi.getAll().then(setContacts);
   }, []);
 
-  const addPerson = async ({ name, number }) => {
-    const personWithSameName = persons.find((person) => person.name === name);
-    if (personWithSameName) {
+  const addContact = async ({ name, number }) => {
+    const contactWithSameName = contacts.find((contact) => contact.name === name);
+    if (contactWithSameName) {
       const shouldReplaceNumber = window.confirm(
         `${name} is already added to phonebook, replace the old number with a new one?`,
       );
@@ -38,11 +38,13 @@ export function App() {
         return { success: false };
       }
 
-      const personObject = { number };
+      const contactObject = { number };
 
-      const updatedPerson = await personsApi.update(personWithSameName.id, personObject);
-      setPersons((prevPersons) =>
-        prevPersons.map((person) => (person.id === personWithSameName.id ? updatedPerson : person)),
+      const updatedContact = await contactsApi.update(contactWithSameName.id, contactObject);
+      setContacts((prevContacts) =>
+        prevContacts.map((contact) =>
+          contact.id === contactWithSameName.id ? updatedContact : contact,
+        ),
       );
 
       notify(`Updated number of "${name}"`, { variant: "info" });
@@ -50,14 +52,14 @@ export function App() {
       return { success: true };
     }
 
-    const personObject = {
+    const contactObject = {
       name,
       number,
     };
 
     try {
-      const createdPreson = await personsApi.create(personObject);
-      setPersons((prevPersons) => prevPersons.concat(createdPreson));
+      const createdPreson = await contactsApi.create(contactObject);
+      setContacts((prevContacts) => prevContacts.concat(createdPreson));
 
       notify(`Added "${name}"`);
 
@@ -69,24 +71,24 @@ export function App() {
     }
   };
 
-  const deletePerson = async (id) => {
-    const existingPerson = persons.find((person) => person.id === id);
+  const deleteContact = async (id) => {
+    const existingContact = contacts.find((contact) => contact.id === id);
 
-    const shouldDelete = window.confirm(`Delete "${existingPerson.name}"?`);
+    const shouldDelete = window.confirm(`Delete "${existingContact.name}"?`);
     if (!shouldDelete) {
       return;
     }
 
     try {
-      await personsApi.delete(id);
+      await contactsApi.delete(id);
 
-      notify(`Deleted "${existingPerson.name}"`, { variant: "info" });
+      notify(`Deleted "${existingContact.name}"`, { variant: "info" });
     } catch {
-      notify(`Information of "${existingPerson.name}" was already removed from server`, {
+      notify(`Information of "${existingContact.name}" was already removed from server`, {
         variant: "error",
       });
     } finally {
-      setPersons((prevPersons) => prevPersons.filter((person) => person.id !== id));
+      setContacts((prevContacts) => prevContacts.filter((contact) => contact.id !== id));
     }
   };
 
@@ -99,16 +101,16 @@ export function App() {
         {alert ? <Alert {...alert} /> : null}
       </header>
       <aside>
-        <PersonFilters searchText={searchText} onSearchTextChange={setSearchText} />
+        <ContactFilters searchText={searchText} onSearchTextChange={setSearchText} />
       </aside>
       <main>
         <section>
-          <h2>Add a new person</h2>
-          <AddPersonForm onSubmit={addPerson} />
+          <h2>Add a new contact</h2>
+          <AddContactForm onSubmit={addContact} />
         </section>
         <section>
           <h2>Numbers</h2>
-          <PersonList persons={persons} filterText={searchText} onDelete={deletePerson} />
+          <ContactList contacts={contacts} filterText={searchText} onDelete={deleteContact} />
         </section>
       </main>
       <Footer />

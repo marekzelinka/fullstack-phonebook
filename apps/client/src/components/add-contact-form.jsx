@@ -1,6 +1,6 @@
 const fieldStyles = { display: "flex", gap: 8 };
 
-export function AddPersonForm({ onSubmit }) {
+export function AddContactForm({ onSubmit }) {
   return (
     <form
       onSubmit={async (event) => {

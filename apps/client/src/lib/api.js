@@ -32,10 +32,10 @@ api.interceptors.response.use(
   },
 );
 
-export const personsApi = {
-  getAll: () => api.get("/persons"),
-  getById: (id) => api.get(`/persons/${id}`),
-  create: (data) => api.post("/persons", data),
-  update: (id, data) => api.patch(`/persons/${id}`, data),
-  delete: (id) => api.delete(`/persons/${id}`),
+export const contactsApi = {
+  getAll: () => api.get("/contacts"),
+  getById: (id) => api.get(`/contacts/${id}`),
+  create: (data) => api.post("/contacts", data),
+  update: (id, data) => api.patch(`/contacts/${id}`, data),
+  delete: (id) => api.delete(`/contacts/${id}`),
 };
