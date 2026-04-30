@@ -16,15 +16,12 @@ jobs:
         with:
           node-version: 25
           cache: "pnpm"
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
       - name: Lint and Format
         run: |
           pnpm run lint
           pnpm run fmt:check
-
       - name: Run Tests
         run: pnpm vitest run
         env:
