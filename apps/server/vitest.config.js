@@ -5,7 +5,7 @@ export default defineProject({
     name: "server",
     environment: "node",
     setupFiles: "./vitest.setup.js",
-    isolate: false,
-    maxWorkers: 1,
+    // isolate: false,
+    // maxWorkers: 1,
   },
 });
