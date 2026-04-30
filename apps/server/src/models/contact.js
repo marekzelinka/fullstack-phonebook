@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const personSchema = new mongoose.Schema({
+const contactSchema = new mongoose.Schema({
   name: {
     type: String,
     minLength: [3, "Name must be at least 3 characters long"],
@@ -19,12 +19,12 @@ const personSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: [true, "A person must belong to a owner"],
-    immutable: [true, "Changing the owner of a person is not allowed"],
+    required: [true, "A contact must belong to a owner"],
+    immutable: [true, "Changing the owner of a contact is not allowed"],
   },
 });
 
-personSchema.set("toJSON", {
+contactSchema.set("toJSON", {
   transform: (_doc, ret) => {
     ret.id = ret._id.toString();
     delete ret._id;
@@ -32,4 +32,4 @@ personSchema.set("toJSON", {
   },
 });
 
-export const Person = mongoose.model("Person", personSchema);
+export const Contact = mongoose.model("Contact", contactSchema);

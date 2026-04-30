@@ -1,7 +1,7 @@
-import { Person } from "../src/models/person.js";
+import { Contact } from "../src/models/contact.js";
 import { User } from "../src/models/user.js";
 
-export function getInitialPersons(userId) {
+export function getInitialContacts(userId) {
   return [
     {
       name: "Arto Hellas",
@@ -16,21 +16,21 @@ export function getInitialPersons(userId) {
   ];
 }
 
-export async function getNonExistingPersonId(userId) {
-  const person = new Person({ name: "willremovethissoon", number: "00-000000", owner: userId });
-  await person.save();
-  await person.deleteOne();
+export async function getValidNonExistingContactId(userId) {
+  const contact = new Contact({ name: "willremovethissoon", number: "00-000000", owner: userId });
+  await contact.save();
+  await contact.deleteOne();
 
-  return person._id.toString();
+  return contact._id.toString();
 }
 
-export async function getPersonsInDb() {
-  const persons = await Person.find();
+export async function getContactsInDb() {
+  const contacts = await Contact.find();
 
-  return persons.map((doc) => {
-    const person = doc.toJSON();
+  return contacts.map((doc) => {
+    const contact = doc.toJSON();
 
-    return { ...person, owner: person.owner.toString() };
+    return { ...contact, owner: contact.owner.toString() };
   });
 }
 

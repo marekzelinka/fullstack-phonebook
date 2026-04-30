@@ -4,14 +4,14 @@ import { expect } from "vitest";
 
 import { app } from "../src/app.js";
 import * as security from "../src/core/security.js";
-import { Person } from "../src/models/person.js";
+import { Contact } from "../src/models/contact.js";
 import { User } from "../src/models/user.js";
 import * as apiTestUtils from "./api-test-utils.js";
 
 const api = supertest(app);
 
-describe("when there is initially an user seeded with some persons", () => {
-  let initialFirstUserPersons;
+describe("when there is initially an user seeded with contacts", () => {
+  let seededUserContacts;
 
   beforeEach(async () => {
     // Important: ensure the unique index is synced for the 'already taken' test
@@ -24,12 +24,12 @@ describe("when there is initially an user seeded with some persons", () => {
       passwordHash,
     });
 
-    initialFirstUserPersons = apiTestUtils.getInitialPersons(user._id);
-    const persons = await Person.insertMany(initialFirstUserPersons);
+    seededUserContacts = apiTestUtils.getInitialContacts(user._id);
+    const contacts = await Contact.insertMany(seededUserContacts);
 
-    // Link seeded persons back to the user
+    // Link seeded contacts back to the user
     await User.findByIdAndUpdate(user._id, {
-      $push: { persons: { $each: persons.map((person) => person._id) } },
+      $push: { contacts: { $each: contacts.map((contact) => contact._id) } },
     });
   });
 

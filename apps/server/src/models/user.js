@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Password hash is required"],
   },
-  persons: [{ type: mongoose.Schema.Types.ObjectId, ref: "Person" }],
+  contacts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Contact" }],
 });
 
 userSchema.set("toJSON", {

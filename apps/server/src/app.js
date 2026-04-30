@@ -6,8 +6,8 @@ import morgan from "morgan";
 
 import { env } from "./core/config.js";
 import * as middleware from "./core/middleware.js";
+import { contactsRouter } from "./routers/contacts.js";
 import { loginRouter } from "./routers/login.js";
-import { personsRouter } from "./routers/persons.js";
 import { usersRouter } from "./routers/users.js";
 
 export const app = express();
@@ -45,7 +45,7 @@ app.get("/api/health", async (_req, res) => {
 
 app.use(middleware.tokenExtractor);
 app.use("/api/login", loginRouter);
-app.use("/api/persons", middleware.userExtractor, personsRouter);
+app.use("/api/contacts", middleware.userExtractor, contactsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/*splat", middleware.unknownEndpoint);
 
