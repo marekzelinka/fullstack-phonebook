@@ -108,7 +108,7 @@ describe("when there are initially some contacts seeded with a owner", () => {
       expect(res.body).toHaveLength(userContacts.length);
     });
 
-    test("returned contacts owned by the user that match seed content", async () => {
+    test("returned contacts owned by the user match seed content", async () => {
       const res = await api.get("/api/contacts").set(authHeader);
 
       const names = res.body.map((contact) => contact.name);
@@ -124,7 +124,7 @@ describe("when there are initially some contacts seeded with a owner", () => {
     });
 
     describe("viewing a specific contact", () => {
-      test("succeeds with owned by the user", async () => {
+      test("succeeds when owned by the user", async () => {
         const contactsAtStart = await apiTestUtils.getContactsInDb();
         const contactToView = contactsAtStart[0];
 
