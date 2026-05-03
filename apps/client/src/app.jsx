@@ -61,7 +61,7 @@ export function App() {
     localStorage.removeItem("token");
   };
 
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(null);
 
   useEffect(() => {
     if (!user) {
@@ -159,8 +159,22 @@ export function App() {
             </section>
             <section>
               <h2>Contacts</h2>
-              <ContactFilters searchText={searchText} onSearchTextChange={setSearchText} />
-              <ContactList contacts={contacts} filterText={searchText} onDelete={deleteContact} />
+              {contacts ? (
+                contacts.length ? (
+                  <>
+                    <ContactFilters searchText={searchText} onSearchTextChange={setSearchText} />
+                    <ContactList
+                      contacts={contacts}
+                      filterText={searchText}
+                      onDelete={deleteContact}
+                    />
+                  </>
+                ) : (
+                  <p>No contacts found...</p>
+                )
+              ) : (
+                <p>Loading contacts...</p>
+              )}
             </section>
           </>
         ) : (
