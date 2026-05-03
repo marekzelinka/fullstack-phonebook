@@ -25,17 +25,26 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       // Clear token and redirect if unauthorized
       localStorage.removeItem("token");
-      window.location.href = "/login";
+      // Keep the UI state in sync with the auth state
+      localStorage.removeItem("user");
     }
 
     return Promise.reject(error);
   },
 );
 
+export const loginApi = {
+  login: (data) => api.post("/login", data),
+};
+
 export const contactsApi = {
+  create: (data) => api.post("/contacts", data),
   getAll: () => api.get("/contacts"),
   getById: (id) => api.get(`/contacts/${id}`),
-  create: (data) => api.post("/contacts", data),
   update: (id, data) => api.patch(`/contacts/${id}`, data),
   delete: (id) => api.delete(`/contacts/${id}`),
+};
+
+export const usersApi = {
+  register: (data) => api.post("/users", data),
 };

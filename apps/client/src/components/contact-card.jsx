@@ -1,4 +1,4 @@
-const cardStyles = { display: "flex", gap: 8 };
+const cardStyles = { display: "flex", alignItems: "center", gap: 8 };
 const cardActionStyles = { display: "flex", gap: 4 };
 
 export function ContactCard({ contact, onDelete }) {

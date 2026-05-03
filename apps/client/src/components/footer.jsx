@@ -1,4 +1,4 @@
-const footerStyle = { color: "green", fontStyle: "italic" };
+const footerStyle = { color: "green", fontStyle: "italic", marginTop: 24 };
 
 export function Footer() {
   return (

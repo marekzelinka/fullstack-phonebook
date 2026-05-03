@@ -1,7 +1,9 @@
+const rowStyles = { display: "flex", gap: 4 };
+
 export function ContactFilters({ searchText, onSearchTextChange }) {
   return (
     <div role="group" aria-label="Contact filter options">
-      <div>
+      <div style={rowStyles}>
         <label>
           Filter shown with{" "}
           <input

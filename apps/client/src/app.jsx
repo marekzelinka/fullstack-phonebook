@@ -5,7 +5,9 @@ import { Alert } from "./components/alert.jsx";
 import { ContactFilters } from "./components/contact-filters.jsx";
 import { ContactList } from "./components/contact-list.jsx";
 import { Footer } from "./components/footer.jsx";
-import { contactsApi } from "./lib/api.js";
+import { LoginForm } from "./components/login-form.jsx";
+import { UserCard } from "./components/user-card.jsx";
+import { contactsApi, loginApi } from "./lib/api.js";
 
 export function App() {
   const [alert, setAlert] = useState(null);
@@ -22,11 +24,52 @@ export function App() {
     alertTimeoutIdRef.current = timeoutId;
   };
 
+  const [user, setUser] = useState(() => {
+    const userValue = localStorage.getItem("user");
+    if (!userValue) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(userValue);
+    } catch {
+      return null;
+    }
+  });
+
+  const login = async ({ username, password }) => {
+    try {
+      const data = await loginApi.login({ username, password });
+      const loggedInUser = { username: data.username, name: data.name };
+      setUser(loggedInUser);
+
+      localStorage.setItem("user", JSON.stringify(loggedInUser));
+      localStorage.setItem("token", data.token);
+
+      return { success: true };
+    } catch (error) {
+      notify(error.response.data.error, { variant: "error" });
+
+      return { success: false };
+    }
+  };
+
+  const logout = () => {
+    setUser(null);
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+  };
+
   const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
+
     contactsApi.getAll().then(setContacts);
-  }, []);
+  }, [user]);
 
   const addContact = async ({ name, number }) => {
     const contactWithSameName = contacts.find((contact) => contact.name === name);
@@ -40,16 +83,22 @@ export function App() {
 
       const contactObject = { number };
 
-      const updatedContact = await contactsApi.update(contactWithSameName.id, contactObject);
-      setContacts((prevContacts) =>
-        prevContacts.map((contact) =>
-          contact.id === contactWithSameName.id ? updatedContact : contact,
-        ),
-      );
+      try {
+        const updatedContact = await contactsApi.update(contactWithSameName.id, contactObject);
+        setContacts((prevContacts) =>
+          prevContacts.map((contact) =>
+            contact.id === contactWithSameName.id ? updatedContact : contact,
+          ),
+        );
 
-      notify(`Updated number of "${name}"`, { variant: "info" });
+        notify(`Updated number of "${name}"`, { variant: "info" });
 
-      return { success: true };
+        return { success: true };
+      } catch (error) {
+        notify(error.response.data.error, { variant: "error" });
+
+        return { success: false };
+      }
     }
 
     const contactObject = {
@@ -98,20 +147,28 @@ export function App() {
     <>
       <header>
         <h1>Fullstack Phonebook</h1>
+        {user ? <UserCard user={user} onLogout={logout} /> : null}
         {alert ? <Alert {...alert} /> : null}
       </header>
-      <aside>
-        <ContactFilters searchText={searchText} onSearchTextChange={setSearchText} />
-      </aside>
       <main>
-        <section>
-          <h2>Add a new contact</h2>
-          <AddContactForm onSubmit={addContact} />
-        </section>
-        <section>
-          <h2>Numbers</h2>
-          <ContactList contacts={contacts} filterText={searchText} onDelete={deleteContact} />
-        </section>
+        {user ? (
+          <>
+            <section>
+              <h2>Add a new contact</h2>
+              <AddContactForm onSubmit={addContact} />
+            </section>
+            <section>
+              <h2>Contacts</h2>
+              <ContactFilters searchText={searchText} onSearchTextChange={setSearchText} />
+              <ContactList contacts={contacts} filterText={searchText} onDelete={deleteContact} />
+            </section>
+          </>
+        ) : (
+          <section>
+            <h2>Login with your username</h2>
+            <LoginForm onSubmit={login} />
+          </section>
+        )}
       </main>
       <Footer />
     </>

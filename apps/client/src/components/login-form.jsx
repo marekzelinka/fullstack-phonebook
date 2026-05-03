@@ -2,7 +2,7 @@ import { useId } from "react";
 
 const fieldStyles = { display: "flex", gap: 8, marginBottom: 6 };
 
-export function AddContactForm({ onSubmit }) {
+export function LoginForm({ onSubmit }) {
   const formId = useId();
 
   return (
@@ -14,8 +14,8 @@ export function AddContactForm({ onSubmit }) {
         const formData = new FormData(form);
 
         const result = await onSubmit({
-          name: formData.get("name"),
-          number: formData.get("number"),
+          username: formData.get("username"),
+          password: formData.get("password"),
         });
         if (result.success) {
           form.reset();
@@ -23,22 +23,15 @@ export function AddContactForm({ onSubmit }) {
       }}
     >
       <div style={fieldStyles}>
-        <label htmlFor={`${formId}-name`}>Name</label>
-        <input type="text" name="name" id={`${formId}-name`} minLength={3} required />
+        <label htmlFor={`${formId}-username`}>Username</label>
+        <input type="text" name="username" id={`${formId}-username`} required />
       </div>
       <div style={fieldStyles}>
-        <label htmlFor={`${formId}-number`}>Number</label>
-        <input
-          type="text"
-          name="number"
-          id={`${formId}-number`}
-          minLength={8}
-          pattern="\d{2,3}-\d+"
-          required
-        />
+        <label htmlFor={`${formId}-password`}>Password</label>
+        <input type="password" name="password" id={`${formId}-password`} required />
       </div>
       <div>
-        <button type="submit">Add contact</button>
+        <button type="submit">Login</button>
       </div>
     </form>
   );

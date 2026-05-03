@@ -1,6 +1,6 @@
 import { ContactCard } from "./contact-card.jsx";
 
-const listStyles = { listStyle: "none", paddingLeft: 0 };
+const listStyles = { listStyle: "none", paddingLeft: 0, display: "grid", gap: 6 };
 
 export function ContactList({ contacts, filterText, onDelete }) {
   const filteredContacts = contacts.filter((contact) =>
