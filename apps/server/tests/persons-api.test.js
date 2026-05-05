@@ -53,7 +53,7 @@ describe("when there are initially some contacts seeded with a owner", () => {
       expect(userContactIds).toContain(res.body.id);
     });
 
-    test("fails with status 400 and correct error ($error) with invalid data ($data)", async () => {
+    test("fails with status 400 with invalid data", async () => {
       const res = await api.post("/api/contacts").set(authHeader).send({ name: "Dan Abramov" });
       expect(res.status).toBe(400);
       expect(res.headers["content-type"]).toMatch(/json/);
@@ -135,7 +135,7 @@ describe("when there are initially some contacts seeded with a owner", () => {
       });
 
       test("fails with status 400 if id is invalid", async () => {
-        const invalidId = "5a3d5da59070081a82a3445";
+        const invalidId = "1";
 
         const res = await api.get(`/api/contacts/${invalidId}`).set(authHeader);
         expect(res.status).toBe(400);
@@ -233,7 +233,7 @@ describe("when there are initially some contacts seeded with a owner", () => {
     });
 
     test("fails with status 400 if id is invalid", async () => {
-      const invalidId = "5a3d5da59070081a82a3445";
+      const invalidId = "1";
 
       const res = await api.patch(`/api/contacts/${invalidId}`).set(authHeader).send({});
       expect(res.status).toBe(400);
@@ -314,7 +314,7 @@ describe("when there are initially some contacts seeded with a owner", () => {
     });
 
     test("fails with status 400 if id is invalid", async () => {
-      const invalidId = "5a3d5da59070081a82a3445";
+      const invalidId = "1";
 
       const res = await api.delete(`/api/contacts/${invalidId}`).set(authHeader);
       expect(res.status).toBe(400);
