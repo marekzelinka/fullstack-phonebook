@@ -1,14 +1,20 @@
-const cardStyles = { display: "flex", alignItems: "center", gap: 8 };
-const cardActionStyles = { display: "flex", gap: 4 };
-
 export function ContactCard({ contact, onDelete }) {
   return (
-    <div style={cardStyles}>
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
       <div>
-        {contact.name} {contact.number}
+        <span>{contact.name}</span> <span>{contact.number}</span>
       </div>
-      <div role="group" style={cardActionStyles} aria-label="Contact actions">
-        <button type="button" onClick={() => onDelete(contact.id)} aria-label="Delete">
+      <div role="group" style={{ display: "flex", gap: 4 }} aria-label="Contact actions">
+        <button
+          type="button"
+          onClick={() => {
+            const shouldDelete = confirm(`Remove contact "${contact.name}"?`);
+            if (shouldDelete) {
+              onDelete(contact.id);
+            }
+          }}
+          aria-label="Delete"
+        >
           ✖
         </button>
       </div>

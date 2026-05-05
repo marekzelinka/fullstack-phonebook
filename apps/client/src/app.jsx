@@ -6,8 +6,11 @@ import { ContactFilters } from "./components/contact-filters.jsx";
 import { ContactList } from "./components/contact-list.jsx";
 import { Footer } from "./components/footer.jsx";
 import { LoginForm } from "./components/login-form.jsx";
+import { Togglable } from "./components/togglable.jsx";
 import { UserCard } from "./components/user-card.jsx";
 import { contactsApi, loginApi } from "./lib/api.js";
+
+const NOTIFY_DEFAULT_TIMEOUT = 3500;
 
 export function App() {
   const [alert, setAlert] = useState(null);
@@ -19,7 +22,7 @@ export function App() {
     }
 
     setAlert({ variant, message });
-    const timeoutId = setTimeout(() => setAlert(null), 3500);
+    const timeoutId = setTimeout(() => setAlert(null), NOTIFY_DEFAULT_TIMEOUT);
 
     alertTimeoutIdRef.current = timeoutId;
   };
@@ -59,16 +62,27 @@ export function App() {
 
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+
+    // TODO: After adding router, we will probably not need this
+    window.location.href = "/";
   };
 
   const [contacts, setContacts] = useState(null);
+  const contactFormRef = useRef();
 
   useEffect(() => {
     if (!user) {
       return;
     }
 
-    contactsApi.getAll().then(setContacts);
+    contactsApi
+      .getAll()
+      .then(setContacts)
+      .catch((error) => {
+        notify(error.response.data.error, { variant: "error" });
+
+        setTimeout(logout, NOTIFY_DEFAULT_TIMEOUT);
+      });
   }, [user]);
 
   const addContact = async ({ name, number }) => {
@@ -92,6 +106,7 @@ export function App() {
         );
 
         notify(`Updated number of "${name}"`, { variant: "info" });
+        contactFormRef.current.toggleVisibility();
 
         return { success: true };
       } catch (error) {
@@ -111,6 +126,7 @@ export function App() {
       setContacts((prevContacts) => prevContacts.concat(createdPreson));
 
       notify(`Added "${name}"`);
+      contactFormRef.current.toggleVisibility();
 
       return { success: true };
     } catch (error) {
@@ -122,11 +138,6 @@ export function App() {
 
   const deleteContact = async (id) => {
     const existingContact = contacts.find((contact) => contact.id === id);
-
-    const shouldDelete = window.confirm(`Delete "${existingContact.name}"?`);
-    if (!shouldDelete) {
-      return;
-    }
 
     try {
       await contactsApi.delete(id);
@@ -154,11 +165,13 @@ export function App() {
         {user ? (
           <>
             <section>
-              <h2>Add a new contact</h2>
-              <AddContactForm onSubmit={addContact} />
+              <Togglable ref={contactFormRef} openButtonLabel="Add new contact">
+                <h2>Add a New Contact</h2>
+                <AddContactForm onSubmit={addContact} />
+              </Togglable>
             </section>
             <section>
-              <h2>Contacts</h2>
+              <h2>Saved Contacts</h2>
               {contacts ? (
                 contacts.length ? (
                   <>
@@ -179,8 +192,10 @@ export function App() {
           </>
         ) : (
           <section>
-            <h2>Login with your username</h2>
-            <LoginForm onSubmit={login} />
+            <Togglable openButtonLabel="Login to view contacts">
+              <h2>Login with your username</h2>
+              <LoginForm onSubmit={login} />
+            </Togglable>
           </section>
         )}
       </main>

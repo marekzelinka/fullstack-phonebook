@@ -38,7 +38,7 @@ export function AddContactForm({ onSubmit }) {
         />
       </div>
       <div>
-        <button type="submit">Add contact</button>
+        <button type="submit">New contact</button>
       </div>
     </form>
   );
