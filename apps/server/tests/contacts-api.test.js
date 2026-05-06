@@ -15,6 +15,9 @@ describe("when there are initially some contacts seeded with a owner", () => {
   let userContacts;
 
   beforeEach(async () => {
+    // Important: ensure the unique index is synced for the 'already taken name' test
+    await Contact.syncIndexes();
+
     const passwordHash = await security.hashPassword(apiTestUtils.initialUser.password);
     user = await User.create({
       username: apiTestUtils.initialUser.username,
@@ -35,7 +38,7 @@ describe("when there are initially some contacts seeded with a owner", () => {
   });
 
   describe("addition of a new contact", () => {
-    test("succeeds with valid data", async () => {
+    test("succeeds with fresh name", async () => {
       const newContact = { name: "Dan Abramov", number: "123-234345" };
 
       const res = await api.post("/api/contacts").set(authHeader).send(newContact);
@@ -53,38 +56,51 @@ describe("when there are initially some contacts seeded with a owner", () => {
       expect(userContactIds).toContain(res.body.id);
     });
 
-    test("fails with status 400 with invalid data", async () => {
-      const res = await api.post("/api/contacts").set(authHeader).send({ name: "Dan Abramov" });
+    test("fails with status 400 when name is already taken", async () => {
+      const contactsAtStart = await apiTestUtils.getContactsInDb();
+
+      const newContact = { name: userContacts[0].name, number: "123-234345" };
+
+      const res = await api.post("/api/contacts").set(authHeader).send(newContact);
       expect(res.status).toBe(400);
       expect(res.headers["content-type"]).toMatch(/json/);
-      expect(res.body.error).toMatch(/number is required/i);
+      expect(res.body.error).toMatch(/name must be unique/i);
 
-      const res2 = await api
-        .post("/api/contacts")
-        .set(authHeader)
-        .send({ name: "Dan Abramov", number: "04-1234" });
-      expect(res2.body.error).toMatch(/number must be at least 8 characters long/i);
+      const contactsAtEnd = await apiTestUtils.getContactsInDb();
+      expect(contactsAtEnd).toHaveLength(contactsAtStart.length);
+    });
 
-      const res3 = await api
-        .post("/api/contacts")
-        .set(authHeader)
-        .send({ name: "Dan Abramov", number: "4a-12342" });
-      expect(res3.body.error).toMatch(/number must be a valid phone number/i);
+    test("fails with status 400 with invalid data", async () => {
+      // Fails is name is missing
+      const res5 = await api.post("/api/contacts").set(authHeader).send({ number: "123-234345" });
+      expect(res5.body.error).toMatch(/name is required/i);
 
+      // Fails if name is too short
       const res4 = await api
         .post("/api/contacts")
         .set(authHeader)
         .send({ name: "Da", number: "123-234345" });
       expect(res4.body.error).toMatch(/name must be at least 3 characters long/i);
 
-      const res5 = await api.post("/api/contacts").set(authHeader).send({ number: "123-234345" });
-      expect(res5.body.error).toMatch(/name is required/i);
+      // Fails if number is missing
+      const res = await api.post("/api/contacts").set(authHeader).send({ name: "Dan Abramov" });
+      expect(res.status).toBe(400);
+      expect(res.headers["content-type"]).toMatch(/json/);
+      expect(res.body.error).toMatch(/number is required/i);
 
-      const res6 = await api
+      // Fails if number is too short
+      const res2 = await api
         .post("/api/contacts")
         .set(authHeader)
-        .send({ name: userContacts[0].name, number: userContacts[0].number });
-      expect(res6.body.error).toMatch(/name must be unique/i);
+        .send({ name: "Dan Abramov", number: "04-1234" });
+      expect(res2.body.error).toMatch(/number must be at least 8 characters long/i);
+
+      // Fails is number is invalid format
+      const res3 = await api
+        .post("/api/contacts")
+        .set(authHeader)
+        .send({ name: "Dan Abramov", number: "4a-12342" });
+      expect(res3.body.error).toMatch(/number must be a valid phone number/i);
 
       const contactsAtEnd = await apiTestUtils.getContactsInDb();
       expect(contactsAtEnd).toHaveLength(userContacts.length);
